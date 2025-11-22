@@ -223,21 +223,57 @@
 
     <!-- Hero Section -->
     <section id="home" class="relative min-h-screen flex items-center justify-center text-white overflow-hidden">
-        <!-- Video Background -->
-        <div class="absolute inset-0 w-full h-full overflow-hidden" id="heroBackground">
-            <!-- Vimeo Video Background (solo per connessioni veloci) -->
-            <iframe 
-                id="heroVideo"
-                data-src="https://player.vimeo.com/video/796230264?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1" 
-                data-fallback-image="images/milano.webp"
-                class="absolute top-1/2 left-1/2 w-full h-full min-w-full min-h-full object-cover hero-iframe"
-                style="transform: translate(-50%, -50%); width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh;"
-                frameborder="0" 
-                allow="autoplay; fullscreen; picture-in-picture" 
-                allowfullscreen>
-            </iframe>
-            <!-- Fallback Image per connessioni lente - milano.webp -->
-            <img id="heroImage" src="images/milano.webp" alt="Milano - Riprese aeree con droni" class="absolute inset-0 w-full h-full object-cover" style="z-index: -1; display: none;" fetchpriority="high" loading="eager">
+        <!-- Animated Background CSS - Drone Theme -->
+        <div class="absolute inset-0 w-full h-full overflow-hidden drone-hero-bg">
+            <!-- Animated Gradient Background -->
+            <div class="absolute inset-0 bg-gradient-animated"></div>
+            
+            <!-- Drone Flight Paths -->
+            <div class="drone-path drone-path-1"></div>
+            <div class="drone-path drone-path-2"></div>
+            <div class="drone-path drone-path-3"></div>
+            
+            <!-- Flying Drones -->
+            <div class="flying-drone drone-1">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                    <circle cx="8" cy="8" r="4" fill="currentColor" opacity="0.3"/>
+                    <circle cx="32" cy="8" r="4" fill="currentColor" opacity="0.3"/>
+                    <circle cx="8" cy="32" r="4" fill="currentColor" opacity="0.3"/>
+                    <circle cx="32" cy="32" r="4" fill="currentColor" opacity="0.3"/>
+                    <rect x="15" y="15" width="10" height="10" fill="currentColor"/>
+                    <circle cx="20" cy="20" r="3" fill="#ef4444"/>
+                </svg>
+            </div>
+            <div class="flying-drone drone-2">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                    <circle cx="8" cy="8" r="4" fill="currentColor" opacity="0.3"/>
+                    <circle cx="32" cy="8" r="4" fill="currentColor" opacity="0.3"/>
+                    <circle cx="8" cy="32" r="4" fill="currentColor" opacity="0.3"/>
+                    <circle cx="32" cy="32" r="4" fill="currentColor" opacity="0.3"/>
+                    <rect x="15" y="15" width="10" height="10" fill="currentColor"/>
+                    <circle cx="20" cy="20" r="3" fill="#ef4444"/>
+                </svg>
+            </div>
+            <div class="flying-drone drone-3">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                    <circle cx="8" cy="8" r="4" fill="currentColor" opacity="0.3"/>
+                    <circle cx="32" cy="8" r="4" fill="currentColor" opacity="0.3"/>
+                    <circle cx="8" cy="32" r="4" fill="currentColor" opacity="0.3"/>
+                    <circle cx="32" cy="32" r="4" fill="currentColor" opacity="0.3"/>
+                    <rect x="15" y="15" width="10" height="10" fill="currentColor"/>
+                    <circle cx="20" cy="20" r="3" fill="#ef4444"/>
+                </svg>
+            </div>
+            
+            <!-- Tech Grid -->
+            <div class="tech-grid"></div>
+            
+            <!-- Floating Particles -->
+            <div class="particles"></div>
+            
+            <!-- Scan Lines Effect -->
+            <div class="scan-line"></div>
+            
             <!-- Dark Overlay -->
             <div class="absolute inset-0 bg-black opacity-40"></div>
         </div>
@@ -782,22 +818,19 @@
         </div>
     </section>
 
-    <!-- Call to Action Video Section -->
+    <!-- Call to Action Section -->
     <section class="relative h-screen flex items-center justify-center text-white overflow-hidden">
-        <!-- Video Background -->
+        <!-- Animated Background - Tech Theme -->
         <div class="absolute inset-0 w-full h-full overflow-hidden">
-            <!-- Vimeo Video Background con lazy loading intelligente -->
-            <iframe 
-                data-src="https://player.vimeo.com/video/796228761?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1" 
-                data-fallback-image="images/servizi_video.webp"
-                class="absolute top-1/2 left-1/2 w-full h-full min-w-full min-h-full object-cover lazy-iframe"
-                style="transform: translate(-50%, -50%); width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; filter: saturate(0.4);"
-                frameborder="0" 
-                allow="autoplay; fullscreen; picture-in-picture" 
-                allowfullscreen>
-            </iframe>
-            <!-- Fallback Image per connessioni lente -->
-            <img src="images/servizi_video.webp" alt="Servizi video professionali" class="absolute inset-0 w-full h-full object-cover" style="z-index: -1; filter: saturate(0.4);" loading="lazy" fetchpriority="low">
+            <!-- Image Background -->
+            <img src="images/servizi_video.webp" alt="Servizi video professionali" class="absolute inset-0 w-full h-full object-cover" style="filter: saturate(0.4) brightness(0.7);" loading="lazy" fetchpriority="low">
+            
+            <!-- Animated Particles Overlay -->
+            <div class="absolute inset-0 particles-overlay"></div>
+            
+            <!-- Pulse Effect -->
+            <div class="pulse-ring"></div>
+            
             <!-- Dark Overlay -->
             <div class="absolute inset-0 bg-black opacity-50"></div>
         </div>
@@ -805,10 +838,10 @@
         <!-- Content -->
         <div class="container mx-auto px-4 relative z-10 text-center">
             <div class="max-w-4xl mx-auto" data-aos="zoom-in">
-                <h2 class="text-6xl md:text-8xl font-bold mb-8 drop-shadow-2xl">
+                <h2 class="text-6xl md:text-8xl font-bold mb-8 drop-shadow-2xl cta-title">
                     <span data-it="Tieniti forte, si vola!" data-en="Hold on tight, we're flying!">Tieniti forte, si vola!</span>
                 </h2>
-                <a href="#contatti" class="inline-block px-10 py-5 bg-white text-blue-600 rounded-full font-bold text-lg hover:bg-blue-50 transition-all transform hover:scale-110 shadow-2xl">
+                <a href="#contatti" class="inline-block px-10 py-5 bg-white text-blue-600 rounded-full font-bold text-lg hover:bg-blue-50 transition-all transform hover:scale-110 shadow-2xl cta-button">
                     <span data-it="Inizia la Tua Avventura" data-en="Start Your Adventure">Inizia la Tua Avventura</span>
                     <i class="fas fa-rocket ml-3"></i>
                 </a>

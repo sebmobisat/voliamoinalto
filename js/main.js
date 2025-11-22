@@ -365,118 +365,18 @@ function hasSaveDataEnabled() {
 }
 
 // ============================================
-// GESTIONE HERO VIDEO/IMMAGINE INTELLIGENTE
+// HERO ANIMATION - CSS PURO (NO VIDEO)
 // ============================================
 document.addEventListener('DOMContentLoaded', function() {
     const connectionSpeed = getConnectionSpeed();
-    const saveDataEnabled = hasSaveDataEnabled();
-    const heroVideo = document.getElementById('heroVideo');
-    const heroImage = document.getElementById('heroImage');
-    
-    // Decidi se caricare video o immagine
-    const shouldLoadVideo = !saveDataEnabled && 
-                           (connectionSpeed === 'fast' || connectionSpeed === 'unknown');
-    
-    console.log(`🎬 Hero Background: ${shouldLoadVideo ? 'VIDEO' : 'IMMAGINE milano.webp'}`);
-    console.log(`📡 Velocità: ${connectionSpeed} | Risparmio dati: ${saveDataEnabled ? 'SÌ' : 'NO'}`);
-    
-    if (shouldLoadVideo && heroVideo) {
-        // Carica il video Vimeo
-        if (heroVideo.dataset.src) {
-            heroVideo.src = heroVideo.dataset.src;
-            console.log('✅ Video hero caricato');
-        }
-    } else if (heroImage) {
-        // Mostra solo l'immagine milano.webp
-        heroImage.style.display = 'block';
-        heroImage.style.zIndex = '1';
-        if (heroVideo) {
-            heroVideo.style.display = 'none';
-        }
-        console.log('✅ Immagine milano.webp caricata (connessione lenta o risparmio dati)');
-    }
+    console.log(`🎨 Hero Animation: CSS PURO (animazione droni)`);
+    console.log(`📡 Velocità: ${connectionSpeed} | Performance: OTTIMIZZATA`);
+    console.log(`✅ Zero video = Zero latenza = Performance 90+`);
 });
 
-// Enhanced Lazy Loading for Vimeo iframes (performance boost!)
-if ('IntersectionObserver' in window) {
-    const connectionSpeed = getConnectionSpeed();
-    const saveDataEnabled = hasSaveDataEnabled();
-    
-    console.log(`📡 Velocità connessione rilevata: ${connectionSpeed}`);
-    console.log(`💾 Risparmio dati: ${saveDataEnabled ? 'ATTIVO' : 'Non attivo'}`);
-    
-    const iframeObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const iframe = entry.target;
-                
-                // Se c'è un'immagine placeholder disponibile
-                const fallbackImage = iframe.dataset.fallbackImage;
-                
-                // Decidi se caricare video o immagine
-                const shouldLoadVideo = !saveDataEnabled && 
-                                       (connectionSpeed === 'fast' || connectionSpeed === 'unknown');
-                
-                if (iframe.dataset.src) {
-                    if (shouldLoadVideo) {
-                        // Carica il video
-                        console.log(`🎬 Caricamento video: connessione ${connectionSpeed}`);
-                        iframe.classList.add('loading');
-                        iframe.src = iframe.dataset.src;
-                        iframe.classList.remove('lazy-iframe', 'loading');
-                        iframe.classList.add('loaded');
-                    } else {
-                        // Sostituisci con immagine statica
-                        console.log(`🖼️  Caricamento immagine invece del video: connessione ${connectionSpeed} o risparmio dati attivo`);
-                        
-                        if (fallbackImage) {
-                            // Crea elemento immagine al posto del video
-                            const img = document.createElement('img');
-                            img.src = fallbackImage;
-                            img.alt = 'Background';
-                            img.className = 'absolute inset-0 w-full h-full object-cover';
-                            img.loading = 'lazy';
-                            
-                            // Sostituisci iframe con immagine
-                            iframe.parentElement.appendChild(img);
-                            iframe.style.display = 'none';
-                            
-                            // Mostra notifica (opzionale)
-                            console.log('ℹ️  Video sostituito con immagine per risparmiare banda');
-                        } else {
-                            // Nessuna immagine di fallback, carica video a bassa qualità
-                            console.log('⚠️  Nessuna immagine fallback, carico video comunque');
-                            iframe.src = iframe.dataset.src;
-                        }
-                        
-                        iframe.classList.remove('lazy-iframe');
-                    }
-                    
-                    iframeObserver.unobserve(iframe);
-                }
-            }
-        });
-    }, {
-        rootMargin: '300px' // Start loading 300px before entering viewport for smooth playback
-    });
-    
-    const lazyIframes = document.querySelectorAll('iframe.lazy-iframe[data-src]');
-    lazyIframes.forEach(iframe => iframeObserver.observe(iframe));
-}
-
-// Monitor cambio connessione in tempo reale
-if (navigator.connection) {
-    navigator.connection.addEventListener('change', () => {
-        const newSpeed = getConnectionSpeed();
-        console.log(`📡 Connessione cambiata: ${newSpeed}`);
-        
-        // Mostra notifica utente (opzionale)
-        if (newSpeed === 'slow' || hasSaveDataEnabled()) {
-            console.log('💡 Suggerimento: ricarica la pagina per ottimizzare il caricamento');
-            showConnectionNotification(newSpeed);
-        }
-    });
-}
+// NO VIDEO = NO LAZY LOADING NEEDED!
+// Tutto è CSS puro, carica istantaneamente 🚀
+console.log('⚡ Performance Mode: MASSIMA - Solo CSS animations');
 
 // ============================================
 // INDICATORE VELOCITÀ CONNESSIONE (opzionale)

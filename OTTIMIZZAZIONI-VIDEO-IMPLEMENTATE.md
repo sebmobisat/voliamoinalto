@@ -206,3 +206,4 @@ function getConnectionSpeed() {
 
 **Implementato con ❤️ per prestazioni ottimali**
 
+

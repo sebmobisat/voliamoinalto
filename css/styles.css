@@ -6,6 +6,281 @@ html {
 }
 
 /* ============================================
+   HERO DRONE ANIMATION - CSS PURE
+   ============================================ */
+
+/* Animated Gradient Background */
+.bg-gradient-animated {
+    background: linear-gradient(135deg, 
+        #0f172a 0%, 
+        #1e3a8a 25%, 
+        #312e81 50%, 
+        #1e40af 75%, 
+        #0f172a 100%
+    );
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* Drone Flight Paths - Glowing Lines */
+.drone-path {
+    position: absolute;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(59, 130, 246, 0.8) 50%, 
+        transparent 100%
+    );
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.8),
+                0 0 20px rgba(59, 130, 246, 0.4);
+    opacity: 0;
+}
+
+.drone-path-1 {
+    width: 80%;
+    top: 20%;
+    left: -80%;
+    animation: flyPath1 12s ease-in-out infinite;
+}
+
+.drone-path-2 {
+    width: 60%;
+    top: 60%;
+    right: -60%;
+    animation: flyPath2 15s ease-in-out infinite 3s;
+}
+
+.drone-path-3 {
+    width: 70%;
+    top: 40%;
+    left: -70%;
+    animation: flyPath3 18s ease-in-out infinite 6s;
+}
+
+@keyframes flyPath1 {
+    0% { left: -80%; opacity: 0; }
+    10% { opacity: 0.8; }
+    90% { opacity: 0.8; }
+    100% { left: 120%; opacity: 0; }
+}
+
+@keyframes flyPath2 {
+    0% { right: -60%; opacity: 0; }
+    10% { opacity: 0.8; }
+    90% { opacity: 0.8; }
+    100% { right: 120%; opacity: 0; }
+}
+
+@keyframes flyPath3 {
+    0% { left: -70%; opacity: 0; }
+    10% { opacity: 0.8; }
+    90% { opacity: 0.8; }
+    100% { left: 120%; opacity: 0; }
+}
+
+/* Flying Drones */
+.flying-drone {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.9);
+    filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.8));
+    opacity: 0;
+}
+
+.drone-1 {
+    top: 20%;
+    left: -50px;
+    animation: flyDrone1 12s ease-in-out infinite;
+}
+
+.drone-2 {
+    top: 60%;
+    right: -50px;
+    animation: flyDrone2 15s ease-in-out infinite 3s;
+}
+
+.drone-3 {
+    top: 40%;
+    left: -50px;
+    animation: flyDrone3 18s ease-in-out infinite 6s;
+}
+
+@keyframes flyDrone1 {
+    0% { left: -50px; opacity: 0; transform: rotate(0deg) scale(0.8); }
+    5% { opacity: 1; }
+    10% { transform: rotate(-5deg) scale(1); }
+    50% { transform: rotate(5deg) scale(1.1); }
+    90% { transform: rotate(-5deg) scale(1); }
+    95% { opacity: 1; }
+    100% { left: calc(100% + 50px); opacity: 0; transform: rotate(0deg) scale(0.8); }
+}
+
+@keyframes flyDrone2 {
+    0% { right: -50px; opacity: 0; transform: rotate(0deg) scale(0.8); }
+    5% { opacity: 1; }
+    10% { transform: rotate(5deg) scale(1); }
+    50% { transform: rotate(-5deg) scale(1.1); }
+    90% { transform: rotate(5deg) scale(1); }
+    95% { opacity: 1; }
+    100% { right: calc(100% + 50px); opacity: 0; transform: rotate(0deg) scale(0.8); }
+}
+
+@keyframes flyDrone3 {
+    0% { left: -50px; opacity: 0; transform: rotate(0deg) scale(0.8); }
+    5% { opacity: 1; }
+    10% { transform: rotate(-5deg) scale(1); }
+    50% { transform: rotate(5deg) scale(1.1); }
+    90% { transform: rotate(-5deg) scale(1); }
+    95% { opacity: 1; }
+    100% { left: calc(100% + 50px); opacity: 0; transform: rotate(0deg) scale(0.8); }
+}
+
+/* Tech Grid */
+.tech-grid {
+    position: absolute;
+    inset: 0;
+    background-image: 
+        linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(50px, 50px); }
+}
+
+/* Floating Particles */
+.particles {
+    position: absolute;
+    inset: 0;
+    background-image: 
+        radial-gradient(2px 2px at 20% 30%, rgba(255, 255, 255, 0.8), transparent),
+        radial-gradient(2px 2px at 60% 70%, rgba(59, 130, 246, 0.8), transparent),
+        radial-gradient(1px 1px at 50% 50%, rgba(255, 255, 255, 0.6), transparent),
+        radial-gradient(2px 2px at 80% 10%, rgba(147, 51, 234, 0.6), transparent),
+        radial-gradient(1px 1px at 90% 60%, rgba(255, 255, 255, 0.7), transparent),
+        radial-gradient(2px 2px at 33% 80%, rgba(59, 130, 246, 0.7), transparent),
+        radial-gradient(1px 1px at 15% 90%, rgba(255, 255, 255, 0.5), transparent);
+    background-size: 200% 200%;
+    animation: particlesFloat 25s ease-in-out infinite;
+}
+
+@keyframes particlesFloat {
+    0%, 100% { 
+        transform: translate(0, 0); 
+        opacity: 1;
+    }
+    50% { 
+        transform: translate(-20px, -30px); 
+        opacity: 0.7;
+    }
+}
+
+/* Scan Line Effect */
+.scan-line {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(59, 130, 246, 0.1) 50%,
+        transparent 100%
+    );
+    height: 100px;
+    animation: scan 8s linear infinite;
+}
+
+@keyframes scan {
+    0% { transform: translateY(-100px); }
+    100% { transform: translateY(100vh); }
+}
+
+/* CTA Section Animations */
+.particles-overlay {
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 50%, rgba(147, 51, 234, 0.15) 0%, transparent 50%);
+    background-size: 200% 200%;
+    animation: particlesOverlayMove 10s ease-in-out infinite;
+}
+
+@keyframes particlesOverlayMove {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.pulse-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 300px;
+    margin: -150px 0 0 -150px;
+    border: 2px solid rgba(59, 130, 246, 0.5);
+    border-radius: 50%;
+    animation: pulseRing 4s ease-out infinite;
+}
+
+@keyframes pulseRing {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+.cta-title {
+    animation: titleGlow 3s ease-in-out infinite;
+}
+
+@keyframes titleGlow {
+    0%, 100% {
+        text-shadow: 0 0 20px rgba(59, 130, 246, 0.5),
+                     0 0 40px rgba(59, 130, 246, 0.3);
+    }
+    50% {
+        text-shadow: 0 0 30px rgba(59, 130, 246, 0.8),
+                     0 0 60px rgba(59, 130, 246, 0.5);
+    }
+}
+
+.cta-button {
+    animation: buttonPulse 2s ease-in-out infinite;
+}
+
+@keyframes buttonPulse {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.5),
+                    0 0 40px rgba(59, 130, 246, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(255, 255, 255, 0.8),
+                    0 0 80px rgba(59, 130, 246, 0.5);
+        transform: scale(1.05);
+    }
+}
+
+/* Performance Optimization */
+.drone-hero-bg,
+.drone-hero-bg * {
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* ============================================
    OTTIMIZZAZIONI PERFORMANCE IMMAGINI & VIDEO
    ============================================ */
 

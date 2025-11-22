@@ -269,3 +269,4 @@ Il deploy su Vercel/Netlify avverrà automaticamente!
 
 **Sistema pronto per produzione! 🎉**
 
+
