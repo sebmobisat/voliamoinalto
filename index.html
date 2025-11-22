@@ -31,17 +31,16 @@
     <meta name="apple-mobile-web-app-title" content="Voliamo in Alto">
     
     <!-- Preload Critical Resources -->
-    <link rel="preload" href="css/styles.css" as="style">
-    <link rel="preload" href="js/main.js" as="script">
+    <link rel="preload" href="fonts/poppins-400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/poppins-700.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="images/logo-header.webp" as="image" type="image/webp">
-    <link rel="preload" href="images/servizi_droni.webp" as="image" type="image/webp">
     
-    <!-- DNS Prefetch for External Resources -->
-    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
-    <link rel="dns-prefetch" href="https://unpkg.com">
-    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="dns-prefetch" href="https://vimeo.com">
+    <!-- Preconnect for External CDNs -->
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    
+    <!-- Critical CSS Inline -->
+    <style>*,::before,::after{box-sizing:border-box;margin:0;padding:0}html{line-height:1.5;font-family:Poppins,sans-serif;scroll-behavior:smooth}body{font-family:Poppins,sans-serif;color:#1f2937;background:#f9fafb}@font-face{font-family:Poppins;font-style:normal;font-weight:400;font-display:swap;src:url(fonts/poppins-400.woff2) format('woff2')}@font-face{font-family:Poppins;font-style:normal;font-weight:700;font-display:swap;src:url(fonts/poppins-700.woff2) format('woff2')}#home{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;color:#fff;overflow:hidden}.bg-gradient-animated{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 25%,#312e81 50%,#1e40af 75%,#0f172a 100%);background-size:400% 400%;animation:gradientShift 15s ease infinite;position:absolute;inset:0}@keyframes gradientShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}</style>
     
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="Voliamo in Alto | Riprese Aeree con Droni a Milano">
@@ -69,22 +68,20 @@
     <link rel="alternate" hreflang="en" href="https://voliamoinalto.com">
     <link rel="alternate" hreflang="x-default" href="https://voliamoinalto.com">
     
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind Utilities - Minimal -->
+    <link rel="stylesheet" href="css/tailwind-min.css">
     
-    <!-- AOS Animation Library -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- AOS Animation Library - Async -->
+    <link rel="preload" href="https://unpkg.com/aos@2.3.1/dist/aos.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"></noscript>
     
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Font Awesome - Async -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/styles.css">
+    <!-- Custom CSS - Async -->
+    <link rel="preload" href="css/styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="css/styles.css"></noscript>
     
     <!-- Structured Data (Schema.org) -->
     <script type="application/ld+json">

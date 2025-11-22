@@ -9,6 +9,8 @@
     "static": "npx serve -l 5000",
     "optimize": "node optimize-images.js",
     "compress": "node compress-images.js",
+    "build:css": "tailwindcss -i ./css/input.css -o ./css/tailwind.min.css --minify",
+    "watch:css": "tailwindcss -i ./css/input.css -o ./css/tailwind.min.css --watch",
     "deploy:netlify": "netlify deploy --prod",
     "deploy:vercel": "vercel --prod",
     "deploy:railway": "railway up"
@@ -44,6 +46,3 @@
     "resend": "^3.0.0"
   }
 }
-
-
-
