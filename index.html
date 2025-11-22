@@ -20,6 +20,8 @@
     <link rel="icon" type="image/png" href="images/ico.png">
     <link rel="shortcut icon" type="image/png" href="images/ico.png">
     <link rel="apple-touch-icon" href="images/ico.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/ico.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/ico.png">
     
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
@@ -31,8 +33,8 @@
     <!-- Preload Critical Resources -->
     <link rel="preload" href="css/styles.css" as="style">
     <link rel="preload" href="js/main.js" as="script">
-    <link rel="preload" href="images/logo-header.png" as="image">
-    <link rel="preload" href="images/hero-background.jpg" as="image">
+    <link rel="preload" href="images/logo-header.webp" as="image" type="image/webp">
+    <link rel="preload" href="images/servizi_droni.webp" as="image" type="image/webp">
     
     <!-- DNS Prefetch for External Resources -->
     <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
@@ -178,7 +180,7 @@
             <div class="flex justify-between items-center">
                 <!-- Logo -->
                 <a href="#home" class="flex items-center hover:opacity-80 transition-opacity">
-                    <img src="images/logo-header.png" alt="Voliamo in Alto" class="h-12 md:h-14">
+                    <img src="images/logo-header.webp" alt="Voliamo in Alto" class="h-12 md:h-14 w-auto" fetchpriority="high">
                 </a>
                 
                 <!-- Desktop Navigation -->
@@ -222,18 +224,20 @@
     <!-- Hero Section -->
     <section id="home" class="relative min-h-screen flex items-center justify-center text-white overflow-hidden">
         <!-- Video Background -->
-        <div class="absolute inset-0 w-full h-full overflow-hidden">
-            <!-- Vimeo Video Background -->
+        <div class="absolute inset-0 w-full h-full overflow-hidden" id="heroBackground">
+            <!-- Vimeo Video Background (solo per connessioni veloci) -->
             <iframe 
-                src="https://player.vimeo.com/video/796230264?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1" 
-                class="absolute top-1/2 left-1/2 w-full h-full min-w-full min-h-full object-cover"
+                id="heroVideo"
+                data-src="https://player.vimeo.com/video/796230264?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1" 
+                data-fallback-image="images/milano.webp"
+                class="absolute top-1/2 left-1/2 w-full h-full min-w-full min-h-full object-cover hero-iframe"
                 style="transform: translate(-50%, -50%); width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh;"
                 frameborder="0" 
                 allow="autoplay; fullscreen; picture-in-picture" 
                 allowfullscreen>
             </iframe>
-            <!-- Fallback Image (if video doesn't load) -->
-            <img src="images/hero-background.jpg" alt="Background" class="absolute inset-0 w-full h-full object-cover" style="z-index: -1;">
+            <!-- Fallback Image per connessioni lente - milano.webp -->
+            <img id="heroImage" src="images/milano.webp" alt="Milano - Riprese aeree con droni" class="absolute inset-0 w-full h-full object-cover" style="z-index: -1; display: none;" fetchpriority="high" loading="eager">
             <!-- Dark Overlay -->
             <div class="absolute inset-0 bg-black opacity-40"></div>
         </div>
@@ -287,7 +291,7 @@
                 <div data-aos="fade-right">
                     <div class="relative">
                         <div class="aspect-square rounded-2xl shadow-2xl overflow-hidden">
-                            <img src="images/DSC04105.jpg" alt="Sebastiano Orfeo - Pilota Droni Certificato" class="w-full h-full object-cover" loading="lazy">
+                            <img src="images/DSC04105.webp" alt="Sebastiano Orfeo - Pilota Droni Certificato" class="w-full h-full object-cover" loading="lazy" fetchpriority="low">
                         </div>
                         <div class="absolute -bottom-6 -right-6 bg-white text-blue-600 rounded-2xl p-6 shadow-xl">
                             <div class="text-3xl font-bold">5+</div>
@@ -354,7 +358,7 @@
                 <!-- Edilizia -->
                 <div class="group relative rounded-2xl shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-2 overflow-hidden h-96" data-aos="fade-up" data-aos-delay="100">
                     <!-- Background Image -->
-                    <img src="images/services/cantieri.png" alt="Edilizia e Cantieri" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
+                    <img src="images/services/cantieri.webp" alt="Edilizia e Cantieri" class="absolute inset-0 w-full h-full object-cover" loading="lazy" fetchpriority="low">
                     
                     <!-- Overlay with Content (appears on hover) -->
                     <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/70 to-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8 text-white">
@@ -378,7 +382,7 @@
                 <!-- Real Estate -->
                 <div class="group relative rounded-2xl shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-2 overflow-hidden h-96" data-aos="fade-up" data-aos-delay="200">
                     <!-- Background Image -->
-                    <img src="images/services/real estate.png" alt="Real Estate" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
+                    <img src="images/services/real estate.webp" alt="Real Estate" class="absolute inset-0 w-full h-full object-cover" loading="lazy" fetchpriority="low">
                     
                     <!-- Overlay with Content (appears on hover) -->
                     <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/70 to-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8 text-white">
@@ -402,7 +406,7 @@
                 <!-- Matrimoni -->
                 <div class="group relative rounded-2xl shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-2 overflow-hidden h-96" data-aos="fade-up" data-aos-delay="300">
                     <!-- Background Image -->
-                    <img src="images/services/matrimoni.jpg" alt="Matrimoni ed Eventi" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
+                    <img src="images/services/matrimoni.webp" alt="Matrimoni ed Eventi" class="absolute inset-0 w-full h-full object-cover" loading="lazy" fetchpriority="low">
                     
                     <!-- Overlay with Content (appears on hover) -->
                     <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/70 to-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8 text-white">
@@ -426,7 +430,7 @@
                 <!-- Content Creators -->
                 <div class="group relative rounded-2xl shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-2 overflow-hidden h-96" data-aos="fade-up" data-aos-delay="100">
                     <!-- Background Image -->
-                    <img src="images/services/content-creator.png" alt="Content Creators" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
+                    <img src="images/services/content-creator.webp" alt="Content Creators" class="absolute inset-0 w-full h-full object-cover" loading="lazy" fetchpriority="low">
                     
                     <!-- Overlay with Content (appears on hover) -->
                     <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/70 to-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8 text-white">
@@ -450,7 +454,7 @@
                 <!-- Cinema e Pubblicità -->
                 <div class="group relative rounded-2xl shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-2 overflow-hidden h-96" data-aos="fade-up" data-aos-delay="200">
                     <!-- Background Image -->
-                    <img src="images/services/cinema.png" alt="Cinema e Pubblicità" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
+                    <img src="images/services/cinema.webp" alt="Cinema e Pubblicità" class="absolute inset-0 w-full h-full object-cover" loading="lazy" fetchpriority="low">
                     
                     <!-- Overlay with Content (appears on hover) -->
                     <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/70 to-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8 text-white">
@@ -474,7 +478,7 @@
                 <!-- Servizi Completi -->
                 <div class="group relative rounded-2xl shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-2 overflow-hidden h-96" data-aos="fade-up" data-aos-delay="300">
                     <!-- Background Image - usando un'immagine disponibile -->
-                    <img src="images/services/Img_09.jpg" alt="Servizi Completi" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
+                    <img src="images/services/Img_09.webp" alt="Servizi Completi" class="absolute inset-0 w-full h-full object-cover" loading="lazy" fetchpriority="low">
                     
                     <!-- Overlay with Content (appears on hover) -->
                     <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/70 to-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8 text-white">
@@ -515,7 +519,7 @@
                 <!-- Image Side -->
                 <div data-aos="fade-right" class="order-2 lg:order-1">
                     <div class="relative rounded-2xl overflow-hidden shadow-2xl">
-                        <img src="images/DSC05003.jpg" alt="Sebastiano Orfeo - Pilota Droni Professionista" class="w-full h-full object-cover" loading="lazy">
+                        <img src="images/DSC05003.webp" alt="Sebastiano Orfeo - Pilota Droni Professionista" class="w-full h-full object-cover" loading="lazy" fetchpriority="low">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
                     </div>
                 </div>
@@ -630,7 +634,7 @@
                 <div class="grid lg:grid-cols-2 gap-8 items-center">
                     <!-- Image -->
                     <div class="order-2 lg:order-1">
-                        <img src="images/video-services.png" alt="Il Problema" class="rounded-2xl shadow-lg w-full" loading="lazy">
+                        <img src="images/video-services.webp" alt="Il Problema" class="rounded-2xl shadow-lg w-full" loading="lazy" fetchpriority="low">
                     </div>
                     
                     <!-- Content -->
@@ -714,7 +718,7 @@
                 <div class="grid md:grid-cols-3 gap-8">
                     <!-- Service 1: Interviste Multicamera -->
                     <div class="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all transform hover:-translate-y-2" data-aos="fade-up" data-aos-delay="100">
-                        <img src="images/interviste.webp" alt="Interviste a multicamera in 4K" class="w-full h-64 object-cover" loading="lazy">
+                        <img src="images/interviste.webp" alt="Interviste a multicamera in 4K" class="w-full h-64 object-cover" loading="lazy" fetchpriority="low">
                         <div class="p-6">
                             <h4 class="text-2xl font-bold mb-4 text-gray-800">
                                 <span data-it="Interviste a multicamera in 4K" data-en="4K Multi-camera Interviews">Interviste a multicamera in 4K</span>
@@ -730,7 +734,7 @@
                     
                     <!-- Service 2: Fotografie RAW -->
                     <div class="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all transform hover:-translate-y-2" data-aos="fade-up" data-aos-delay="200">
-                        <img src="images/fotografia.webp" alt="Fotografie in formato RAW" class="w-full h-64 object-cover" loading="lazy">
+                        <img src="images/fotografia.webp" alt="Fotografie in formato RAW" class="w-full h-64 object-cover" loading="lazy" fetchpriority="low">
                         <div class="p-6">
                             <h4 class="text-2xl font-bold mb-4 text-gray-800">
                                 <span data-it="Fotografie in formato RAW" data-en="RAW Format Photography">Fotografie in formato RAW</span>
@@ -746,7 +750,7 @@
                     
                     <!-- Service 3: Editing Cinematografico -->
                     <div class="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all transform hover:-translate-y-2" data-aos="fade-up" data-aos-delay="300">
-                        <img src="images/editing.webp" alt="Editing a livello cinematografico" class="w-full h-64 object-cover" loading="lazy">
+                        <img src="images/editing.webp" alt="Editing a livello cinematografico" class="w-full h-64 object-cover" loading="lazy" fetchpriority="low">
                         <div class="p-6">
                             <h4 class="text-2xl font-bold mb-4 text-gray-800">
                                 <span data-it="Editing a livello cinematografico" data-en="Cinematic Level Editing">Editing a livello cinematografico</span>
@@ -772,7 +776,7 @@
                 </p>
                 
                 <a href="https://www.youtube.com/@seborfeo" target="_blank" class="inline-block transform hover:scale-110 transition-transform">
-                    <img src="images/Logo-YouTube-rosso.png" alt="YouTube" class="h-24 mx-auto" loading="lazy">
+                    <img src="images/Logo-YouTube-rosso.webp" alt="YouTube" class="h-24 mx-auto" loading="lazy" fetchpriority="low">
                 </a>
             </div>
         </div>
@@ -782,17 +786,18 @@
     <section class="relative h-screen flex items-center justify-center text-white overflow-hidden">
         <!-- Video Background -->
         <div class="absolute inset-0 w-full h-full overflow-hidden">
-            <!-- Vimeo Video Background -->
+            <!-- Vimeo Video Background con lazy loading intelligente -->
             <iframe 
                 data-src="https://player.vimeo.com/video/796228761?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1" 
+                data-fallback-image="images/servizi_video.webp"
                 class="absolute top-1/2 left-1/2 w-full h-full min-w-full min-h-full object-cover lazy-iframe"
                 style="transform: translate(-50%, -50%); width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; filter: saturate(0.4);"
                 frameborder="0" 
                 allow="autoplay; fullscreen; picture-in-picture" 
                 allowfullscreen>
             </iframe>
-            <!-- Fallback Image -->
-            <img src="images/video-section-background.jpg" alt="Background" class="absolute inset-0 w-full h-full object-cover" style="z-index: -1;" loading="lazy">
+            <!-- Fallback Image per connessioni lente -->
+            <img src="images/servizi_video.webp" alt="Servizi video professionali" class="absolute inset-0 w-full h-full object-cover" style="z-index: -1; filter: saturate(0.4);" loading="lazy" fetchpriority="low">
             <!-- Dark Overlay -->
             <div class="absolute inset-0 bg-black opacity-50"></div>
         </div>

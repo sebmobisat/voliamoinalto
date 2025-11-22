@@ -17,10 +17,15 @@ console.log('🗜️  Compressione Immagini - Voliamo in Alto\n');
 
 // Configurazione
 const config = {
-    quality: 85, // Qualità JPEG (80-90 è ottimale)
+    jpegQuality: 85, // Qualità JPEG (80-90 è ottimale)
+    pngQuality: 90, // Qualità PNG (80-95 è ottimale)
+    webpQuality: 85, // Qualità WebP (80-90 è ottimale)
     maxWidth: 1920, // Larghezza massima
     maxHeight: 1080, // Altezza massima
-    createBackup: true // Backup immagini originali
+    createBackup: true, // Backup immagini originali
+    convertToWebP: true, // Converti in WebP (mantieni originali)
+    optimizePNG: true, // Ottimizza PNG
+    replaceOriginals: false // Sostituisci originali con WebP (false = mantieni entrambi)
 };
 
 // Directory
@@ -38,31 +43,104 @@ if (config.createBackup && !fs.existsSync(backupDir)) {
 // Funzione compressione
 async function compressImage(inputPath, outputPath, relativePath) {
     const originalSize = fs.statSync(inputPath).size;
+    const ext = path.extname(inputPath).toLowerCase();
+    const isPNG = ext === '.png';
+    const isJPG = ['.jpg', '.jpeg'].includes(ext);
     
     try {
         // Backup originale
         if (config.createBackup) {
             const backupPath = path.join(backupDir, relativePath);
+            const backupDirPath = path.dirname(backupPath);
+            if (!fs.existsSync(backupDirPath)) {
+                fs.mkdirSync(backupDirPath, { recursive: true });
+            }
             fs.copyFileSync(inputPath, backupPath);
         }
 
-        // Comprimi con sharp
-        await sharp(inputPath)
+        let sharpInstance = sharp(inputPath)
             .resize(config.maxWidth, config.maxHeight, {
                 fit: 'inside',
                 withoutEnlargement: true
-            })
-            .jpeg({ quality: config.quality, progressive: true })
-            .toFile(outputPath + '.tmp');
+            });
 
-        // Sostituisci originale
-        fs.renameSync(outputPath + '.tmp', outputPath);
+        // Applica compressione in base al formato
+        if (isPNG && config.optimizePNG) {
+            sharpInstance = sharpInstance.png({ 
+                quality: config.pngQuality,
+                compressionLevel: 9,
+                adaptiveFiltering: true
+            });
+        } else if (isJPG) {
+            sharpInstance = sharpInstance.jpeg({ 
+                quality: config.jpegQuality, 
+                progressive: true,
+                mozjpeg: true
+            });
+        } else {
+            // Mantieni formato originale
+            sharpInstance = sharpInstance;
+        }
+
+        await sharpInstance.toFile(outputPath + '.tmp');
+
+        // Sostituisci originale con retry per gestire file aperti
+        let retries = 3;
+        while (retries > 0) {
+            try {
+                // Se il file esiste, rimuovilo prima
+                if (fs.existsSync(outputPath)) {
+                    fs.unlinkSync(outputPath);
+                }
+                fs.renameSync(outputPath + '.tmp', outputPath);
+                break;
+            } catch (error) {
+                retries--;
+                if (retries === 0) {
+                    // Se fallisce, mantieni il file .tmp e segnala
+                    console.log(`     ⚠️  File potrebbe essere aperto, mantieni ${path.basename(outputPath + '.tmp')}`);
+                    throw error;
+                }
+                // Aspetta 500ms prima di riprovare
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+        }
 
         const newSize = fs.statSync(outputPath).size;
         const saved = ((originalSize - newSize) / originalSize * 100).toFixed(1);
         
         console.log(`  ✅ ${path.basename(inputPath)}`);
         console.log(`     ${(originalSize / 1024 / 1024).toFixed(2)} MB → ${(newSize / 1024 / 1024).toFixed(2)} MB (-${saved}%)`);
+        
+        // Crea anche versione WebP se richiesto
+        if (config.convertToWebP && (isPNG || isJPG)) {
+            const webpPath = outputPath.replace(ext, '.webp');
+            const webpSize = fs.statSync(inputPath).size;
+            
+            await sharp(inputPath)
+                .resize(config.maxWidth, config.maxHeight, {
+                    fit: 'inside',
+                    withoutEnlargement: true
+                })
+                .webp({ 
+                    quality: config.webpQuality,
+                    effort: 6 // 0-6, più alto = compressione migliore ma più lento
+                })
+                .toFile(webpPath);
+            
+            const webpNewSize = fs.statSync(webpPath).size;
+            const webpSaved = ((webpSize - webpNewSize) / webpSize * 100).toFixed(1);
+            
+            console.log(`     📦 WebP creato: ${path.basename(webpPath)}`);
+            console.log(`        ${(webpSize / 1024 / 1024).toFixed(2)} MB → ${(webpNewSize / 1024 / 1024).toFixed(2)} MB (-${webpSaved}%)`);
+            
+            // Se replaceOriginals è true, sostituisci l'originale con WebP
+            if (config.replaceOriginals) {
+                fs.unlinkSync(outputPath);
+                fs.renameSync(webpPath, outputPath.replace(ext, '.webp'));
+                console.log(`        ✨ Originale sostituito con WebP`);
+            }
+        }
         
         return { originalSize, newSize, saved: parseFloat(saved) };
     } catch (error) {
@@ -81,9 +159,9 @@ async function processDirectory(dir, relativePath = '') {
         const stat = fs.statSync(filePath);
         const relPath = path.join(relativePath, file);
 
-        if (stat.isFile() && /\.(jpg|jpeg|png)$/i.test(file)) {
-            // Salta file già ottimizzati WebP
-            if (file.endsWith('.webp')) continue;
+        if (stat.isFile() && /\.(jpg|jpeg|png|webp)$/i.test(file)) {
+            // Salta file .tmp e backup
+            if (file.endsWith('.tmp') || file.includes('backup')) continue;
             
             const result = await compressImage(filePath, filePath, relPath);
             if (result) results.push(result);
@@ -111,7 +189,15 @@ async function processDirectory(dir, relativePath = '') {
     console.log(`   Immagini processate: ${allResults.length}`);
     console.log(`   Dimensione originale: ${(totalOriginal / 1024 / 1024).toFixed(2)} MB`);
     console.log(`   Dimensione compressa: ${(totalNew / 1024 / 1024).toFixed(2)} MB`);
-    console.log(`   Spazio risparmiato: ${(totalOriginal - totalNew) / 1024 / 1024).toFixed(2)} MB (-${totalSaved}%)`);
+    console.log(`   Spazio risparmiato: ${((totalOriginal - totalNew) / 1024 / 1024).toFixed(2)} MB (-${totalSaved}%)`);
+    
+    if (config.convertToWebP) {
+        console.log('');
+        console.log('📦 Versioni WebP create per tutte le immagini JPG/PNG');
+        console.log('   💡 WebP è supportato da tutti i browser moderni');
+        console.log('   💡 Risparmio medio: 25-35% rispetto a JPEG/PNG ottimizzati');
+    }
+    
     console.log('');
     console.log('✅ Compressione completata!');
     
@@ -122,7 +208,8 @@ async function processDirectory(dir, relativePath = '') {
     console.log('');
     console.log('🚀 Prossimi passi:');
     console.log('   1. Testa il sito in locale');
-    console.log('   2. Se tutto ok: git add . && git commit && git push');
-    console.log('   3. Railway farà il deploy automaticamente!');
+    console.log('   2. Verifica che le immagini WebP si carichino correttamente');
+    console.log('   3. Se tutto ok: git add . && git commit && git push');
+    console.log('   4. Il deploy avverrà automaticamente!');
 })();
 

@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (yearElement) {
         yearElement.textContent = currentYear;
     }
+    
+    // Abilita supporto WebP automatico
+    enableWebPSupport();
 });
 
 // Language Management
@@ -240,45 +243,363 @@ contactForm?.addEventListener('submit', function(e) {
     });
 });
 
-// Lazy Loading Images (if you add real images later)
+// Auto WebP Support - Sostituisce automaticamente JPG/PNG con WebP se disponibile
+function enableWebPSupport() {
+    // Controlla se il browser supporta WebP
+    const webpSupported = document.createElement('canvas').toDataURL('image/webp').indexOf('data:image/webp') === 0;
+    
+    if (webpSupported) {
+        // Trova tutte le immagini JPG/PNG e prova a caricare la versione WebP
+        const images = document.querySelectorAll('img[src$=".jpg"], img[src$=".jpeg"], img[src$=".png"]');
+        
+        images.forEach(img => {
+            const originalSrc = img.src;
+            const webpSrc = originalSrc.replace(/\.(jpg|jpeg|png)$/i, '.webp');
+            
+            // Prova a caricare WebP
+            const testImg = new Image();
+            testImg.onload = function() {
+                // WebP esiste, sostituisci
+                img.src = webpSrc;
+            };
+            testImg.onerror = function() {
+                // WebP non esiste, mantieni originale
+            };
+            testImg.src = webpSrc;
+        });
+    }
+}
+
+// Enhanced Lazy Loading Images with IntersectionObserver
+// This works for images with data-src attribute (fallback for older browsers)
 if ('IntersectionObserver' in window) {
     const imageObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const img = entry.target;
                 if (img.dataset.src) {
-                    img.src = img.dataset.src;
-                    img.classList.remove('lazy');
-                    imageObserver.unobserve(img);
+                    // Add loading state
+                    img.classList.add('loading');
+                    
+                    // Load the image
+                    const imageLoader = new Image();
+                    imageLoader.onload = () => {
+                        img.src = img.dataset.src;
+                        img.classList.remove('lazy', 'loading');
+                        img.classList.add('loaded');
+                        imageObserver.unobserve(img);
+                    };
+                    imageLoader.onerror = () => {
+                        img.classList.remove('lazy', 'loading');
+                        img.classList.add('error');
+                        imageObserver.unobserve(img);
+                    };
+                    imageLoader.src = img.dataset.src;
                 }
             }
         });
+    }, {
+        rootMargin: '50px' // Start loading 50px before entering viewport
     });
     
-    const lazyImages = document.querySelectorAll('img.lazy');
+    // Observe images with data-src (for fallback lazy loading)
+    const lazyImages = document.querySelectorAll('img.lazy[data-src]');
     lazyImages.forEach(img => imageObserver.observe(img));
+    
+    // Also enhance native lazy loading with fetchpriority
+    const nativeLazyImages = document.querySelectorAll('img[loading="lazy"]:not([fetchpriority])');
+    nativeLazyImages.forEach(img => {
+        // Set fetchpriority to low for lazy images
+        img.setAttribute('fetchpriority', 'low');
+        
+        // Add sizes attribute if not present for responsive images
+        if (!img.hasAttribute('sizes') && img.classList.contains('w-full')) {
+            img.setAttribute('sizes', '(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw');
+        }
+    });
+    
+    // Preload images that are about to enter viewport
+    const preloadObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                if (img.dataset.srcset) {
+                    // Preload srcset images
+                    const link = document.createElement('link');
+                    link.rel = 'preload';
+                    link.as = 'image';
+                    link.href = img.dataset.srcset.split(',')[0].trim().split(' ')[0];
+                    document.head.appendChild(link);
+                }
+            }
+        });
+    }, {
+        rootMargin: '100px'
+    });
+    
+    const preloadImages = document.querySelectorAll('img[data-srcset]');
+    preloadImages.forEach(img => preloadObserver.observe(img));
 }
 
-// Lazy Loading for Vimeo iframes (performance boost!)
+// ============================================
+// SISTEMA INTELLIGENTE LAZY LOADING VIDEO
+// con detection velocità connessione
+// ============================================
+
+// Rileva velocità di connessione
+function getConnectionSpeed() {
+    if (!navigator.connection) return 'unknown';
+    
+    const connection = navigator.connection;
+    const effectiveType = connection.effectiveType; // '4g', '3g', '2g', 'slow-2g'
+    
+    // Classifica connessione
+    if (effectiveType === '4g' || effectiveType === 'wifi') return 'fast';
+    if (effectiveType === '3g') return 'medium';
+    return 'slow';
+}
+
+// Rileva se l'utente ha Save-Data attivo
+function hasSaveDataEnabled() {
+    return navigator.connection && navigator.connection.saveData === true;
+}
+
+// ============================================
+// GESTIONE HERO VIDEO/IMMAGINE INTELLIGENTE
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    const connectionSpeed = getConnectionSpeed();
+    const saveDataEnabled = hasSaveDataEnabled();
+    const heroVideo = document.getElementById('heroVideo');
+    const heroImage = document.getElementById('heroImage');
+    
+    // Decidi se caricare video o immagine
+    const shouldLoadVideo = !saveDataEnabled && 
+                           (connectionSpeed === 'fast' || connectionSpeed === 'unknown');
+    
+    console.log(`🎬 Hero Background: ${shouldLoadVideo ? 'VIDEO' : 'IMMAGINE milano.webp'}`);
+    console.log(`📡 Velocità: ${connectionSpeed} | Risparmio dati: ${saveDataEnabled ? 'SÌ' : 'NO'}`);
+    
+    if (shouldLoadVideo && heroVideo) {
+        // Carica il video Vimeo
+        if (heroVideo.dataset.src) {
+            heroVideo.src = heroVideo.dataset.src;
+            console.log('✅ Video hero caricato');
+        }
+    } else if (heroImage) {
+        // Mostra solo l'immagine milano.webp
+        heroImage.style.display = 'block';
+        heroImage.style.zIndex = '1';
+        if (heroVideo) {
+            heroVideo.style.display = 'none';
+        }
+        console.log('✅ Immagine milano.webp caricata (connessione lenta o risparmio dati)');
+    }
+});
+
+// Enhanced Lazy Loading for Vimeo iframes (performance boost!)
 if ('IntersectionObserver' in window) {
+    const connectionSpeed = getConnectionSpeed();
+    const saveDataEnabled = hasSaveDataEnabled();
+    
+    console.log(`📡 Velocità connessione rilevata: ${connectionSpeed}`);
+    console.log(`💾 Risparmio dati: ${saveDataEnabled ? 'ATTIVO' : 'Non attivo'}`);
+    
     const iframeObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const iframe = entry.target;
+                
+                // Se c'è un'immagine placeholder disponibile
+                const fallbackImage = iframe.dataset.fallbackImage;
+                
+                // Decidi se caricare video o immagine
+                const shouldLoadVideo = !saveDataEnabled && 
+                                       (connectionSpeed === 'fast' || connectionSpeed === 'unknown');
+                
                 if (iframe.dataset.src) {
-                    iframe.src = iframe.dataset.src;
-                    iframe.classList.remove('lazy-iframe');
+                    if (shouldLoadVideo) {
+                        // Carica il video
+                        console.log(`🎬 Caricamento video: connessione ${connectionSpeed}`);
+                        iframe.classList.add('loading');
+                        iframe.src = iframe.dataset.src;
+                        iframe.classList.remove('lazy-iframe', 'loading');
+                        iframe.classList.add('loaded');
+                    } else {
+                        // Sostituisci con immagine statica
+                        console.log(`🖼️  Caricamento immagine invece del video: connessione ${connectionSpeed} o risparmio dati attivo`);
+                        
+                        if (fallbackImage) {
+                            // Crea elemento immagine al posto del video
+                            const img = document.createElement('img');
+                            img.src = fallbackImage;
+                            img.alt = 'Background';
+                            img.className = 'absolute inset-0 w-full h-full object-cover';
+                            img.loading = 'lazy';
+                            
+                            // Sostituisci iframe con immagine
+                            iframe.parentElement.appendChild(img);
+                            iframe.style.display = 'none';
+                            
+                            // Mostra notifica (opzionale)
+                            console.log('ℹ️  Video sostituito con immagine per risparmiare banda');
+                        } else {
+                            // Nessuna immagine di fallback, carica video a bassa qualità
+                            console.log('⚠️  Nessuna immagine fallback, carico video comunque');
+                            iframe.src = iframe.dataset.src;
+                        }
+                        
+                        iframe.classList.remove('lazy-iframe');
+                    }
+                    
                     iframeObserver.unobserve(iframe);
                 }
             }
         });
     }, {
-        rootMargin: '200px' // Start loading 200px before entering viewport
+        rootMargin: '300px' // Start loading 300px before entering viewport for smooth playback
     });
     
-    const lazyIframes = document.querySelectorAll('iframe.lazy-iframe');
+    const lazyIframes = document.querySelectorAll('iframe.lazy-iframe[data-src]');
     lazyIframes.forEach(iframe => iframeObserver.observe(iframe));
 }
+
+// Monitor cambio connessione in tempo reale
+if (navigator.connection) {
+    navigator.connection.addEventListener('change', () => {
+        const newSpeed = getConnectionSpeed();
+        console.log(`📡 Connessione cambiata: ${newSpeed}`);
+        
+        // Mostra notifica utente (opzionale)
+        if (newSpeed === 'slow' || hasSaveDataEnabled()) {
+            console.log('💡 Suggerimento: ricarica la pagina per ottimizzare il caricamento');
+            showConnectionNotification(newSpeed);
+        }
+    });
+}
+
+// ============================================
+// INDICATORE VELOCITÀ CONNESSIONE (opzionale)
+// ============================================
+function showConnectionNotification(speed) {
+    // Crea indicatore se non esiste
+    let indicator = document.querySelector('.connection-indicator');
+    if (!indicator) {
+        indicator = document.createElement('div');
+        indicator.className = 'connection-indicator';
+        document.body.appendChild(indicator);
+    }
+    
+    // Imposta messaggio e stile
+    const messages = {
+        'fast': '🚀 Connessione veloce',
+        'medium': '⚡ Connessione media',
+        'slow': '🐌 Connessione lenta - video disattivati',
+        'unknown': '📡 Connessione rilevata'
+    };
+    
+    indicator.textContent = messages[speed] || messages['unknown'];
+    indicator.className = `connection-indicator connection-${speed} show`;
+    
+    // Nascondi dopo 5 secondi
+    setTimeout(() => {
+        indicator.classList.remove('show');
+    }, 5000);
+}
+
+// Mostra indicatore all'avvio (opzionale - commenta se non vuoi)
+// setTimeout(() => {
+//     const speed = getConnectionSpeed();
+//     if (speed !== 'fast' && speed !== 'unknown') {
+//         showConnectionNotification(speed);
+//     }
+// }, 2000);
+
+// ============================================
+// PERFORMANCE MONITORING
+// ============================================
+
+// Monitora Core Web Vitals
+if ('PerformanceObserver' in window) {
+    // Largest Contentful Paint (LCP)
+    try {
+        const lcpObserver = new PerformanceObserver((list) => {
+            const entries = list.getEntries();
+            const lastEntry = entries[entries.length - 1];
+            console.log(`📊 LCP: ${lastEntry.renderTime || lastEntry.loadTime}ms`);
+        });
+        lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+    } catch (e) {
+        // Browser non supporta
+    }
+    
+    // First Input Delay (FID)
+    try {
+        const fidObserver = new PerformanceObserver((list) => {
+            const entries = list.getEntries();
+            entries.forEach(entry => {
+                console.log(`📊 FID: ${entry.processingStart - entry.startTime}ms`);
+            });
+        });
+        fidObserver.observe({ entryTypes: ['first-input'] });
+    } catch (e) {
+        // Browser non supporta
+    }
+    
+    // Cumulative Layout Shift (CLS)
+    try {
+        let clsScore = 0;
+        const clsObserver = new PerformanceObserver((list) => {
+            for (const entry of list.getEntries()) {
+                if (!entry.hadRecentInput) {
+                    clsScore += entry.value;
+                }
+            }
+            console.log(`📊 CLS: ${clsScore.toFixed(4)}`);
+        });
+        clsObserver.observe({ entryTypes: ['layout-shift'] });
+    } catch (e) {
+        // Browser non supporta
+    }
+}
+
+// Monitora tempo di caricamento immagini
+const imageLoadTimes = [];
+document.addEventListener('DOMContentLoaded', () => {
+    const images = document.querySelectorAll('img[loading="lazy"]');
+    images.forEach(img => {
+        const startTime = performance.now();
+        img.addEventListener('load', () => {
+            const loadTime = performance.now() - startTime;
+            imageLoadTimes.push(loadTime);
+            if (loadTime > 1000) {
+                console.warn(`⚠️  Immagine lenta: ${img.src.split('/').pop()} - ${loadTime.toFixed(0)}ms`);
+            }
+        });
+    });
+});
+
+// Log statistiche performance alla fine del caricamento
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        if (imageLoadTimes.length > 0) {
+            const avgTime = imageLoadTimes.reduce((a, b) => a + b, 0) / imageLoadTimes.length;
+            console.log(`📊 Tempo medio caricamento immagini: ${avgTime.toFixed(0)}ms`);
+        }
+        
+        // Navigation Timing
+        if (window.performance && window.performance.timing) {
+            const timing = window.performance.timing;
+            const loadTime = timing.loadEventEnd - timing.navigationStart;
+            const domReady = timing.domContentLoadedEventEnd - timing.navigationStart;
+            
+            console.log(`📊 Statistiche Performance:`);
+            console.log(`   - DOM Ready: ${domReady}ms`);
+            console.log(`   - Page Load: ${loadTime}ms`);
+            console.log(`   - TTFB: ${timing.responseStart - timing.navigationStart}ms`);
+        }
+    }, 1000);
+});
 
 // Add floating animation to hero elements
 const floatingElements = document.querySelectorAll('.floating');
