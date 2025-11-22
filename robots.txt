@@ -3,8 +3,8 @@
 User-agent: *
 Allow: /
 
-# Sitemap
-Sitemap: https://voliamoinalto.com/sitemap.xml
+# Sitemap (NUOVA - aggiornata 22/11/2025)
+Sitemap: https://voliamoinalto.com/sitemap-new.xml
 
 # Disallow crawling di eventuali file sensibili
 Disallow: /admin/
@@ -15,6 +15,7 @@ Disallow: /*.json$
 Allow: /css/
 Allow: /js/
 Allow: /images/
+Allow: /sitemap-new.xml
 Allow: /sitemap.xml
 
 # Crawl-delay (opzionale, utile per prevenire sovraccarico)
