@@ -4,10 +4,11 @@
   "description": "Sito web professionale per servizi di riprese aeree con droni e video a Milano",
   "main": "index.html",
   "scripts": {
-    "start": "npx serve .",
+    "start": "npx serve -l ${PORT:-8080}",
     "dev": "npx live-server --port=8080",
     "deploy:netlify": "netlify deploy --prod",
-    "deploy:vercel": "vercel --prod"
+    "deploy:vercel": "vercel --prod",
+    "deploy:railway": "railway up"
   },
   "repository": {
     "type": "git",
@@ -25,9 +26,12 @@
     "wedding",
     "real-estate"
   ],
-  "author": "Sebastiano Orfeo <info@voliamoinalto.com>",
+  "author": "Sebastiano Orfeo <hello@voliamoinalto.com>",
   "license": "UNLICENSED",
   "private": true,
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "devDependencies": {},
   "dependencies": {}
 }
