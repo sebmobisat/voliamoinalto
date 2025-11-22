@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Pagina Non Trovata | Voliamo in Alto</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 min-h-screen flex items-center justify-center text-white">
+    
+    <div class="container mx-auto px-4 text-center">
+        <div class="max-w-2xl mx-auto">
+            
+            <!-- Icon -->
+            <div class="mb-8 floating">
+                <i class="fas fa-plane-slash text-9xl opacity-50"></i>
+            </div>
+            
+            <!-- 404 Title -->
+            <h1 class="text-9xl font-bold mb-4">404</h1>
+            
+            <!-- Message -->
+            <h2 class="text-3xl md:text-4xl font-bold mb-4" id="title">
+                Pagina Non Trovata
+            </h2>
+            
+            <p class="text-xl mb-8 text-blue-100" id="message">
+                Ops! Sembra che questa pagina abbia volato via. Non riusciamo a trovarla nel nostro radar.
+            </p>
+            
+            <!-- Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+                <a href="/" class="px-8 py-4 bg-white text-blue-600 rounded-full font-semibold hover:bg-blue-50 transition-all transform hover:scale-105 shadow-lg">
+                    <i class="fas fa-home mr-2"></i>
+                    <span id="homeBtn">Torna alla Home</span>
+                </a>
+                <button onclick="history.back()" class="px-8 py-4 bg-transparent border-2 border-white text-white rounded-full font-semibold hover:bg-white hover:text-blue-600 transition-all">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    <span id="backBtn">Torna Indietro</span>
+                </button>
+            </div>
+            
+            <!-- Language Toggle -->
+            <button id="langToggle" class="inline-flex items-center space-x-2 px-4 py-2 bg-white/20 backdrop-blur-sm text-white rounded-full hover:bg-white/30 transition-colors">
+                <i class="fas fa-globe"></i>
+                <span id="currentLang">IT</span>
+            </button>
+            
+            <!-- Suggestions -->
+            <div class="mt-12 bg-white/10 backdrop-blur-sm rounded-2xl p-6">
+                <h3 class="text-xl font-bold mb-4" id="suggestionsTitle">Forse stai cercando:</h3>
+                <div class="flex flex-wrap gap-4 justify-center">
+                    <a href="/#servizi-droni" class="text-blue-200 hover:text-white transition-colors" id="link1">Servizi Droni</a>
+                    <span class="text-blue-300">|</span>
+                    <a href="/#servizi-video" class="text-blue-200 hover:text-white transition-colors" id="link2">Servizi Video</a>
+                    <span class="text-blue-300">|</span>
+                    <a href="/#contatti" class="text-blue-200 hover:text-white transition-colors" id="link3">Contatti</a>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+    <script>
+        // Language Management
+        let currentLanguage = localStorage.getItem('language') || 'it';
+        
+        const translations = {
+            it: {
+                title: 'Pagina Non Trovata',
+                message: 'Ops! Sembra che questa pagina abbia volato via. Non riusciamo a trovarla nel nostro radar.',
+                homeBtn: 'Torna alla Home',
+                backBtn: 'Torna Indietro',
+                suggestionsTitle: 'Forse stai cercando:',
+                link1: 'Servizi Droni',
+                link2: 'Servizi Video',
+                link3: 'Contatti'
+            },
+            en: {
+                title: 'Page Not Found',
+                message: "Oops! It seems this page has flown away. We can't find it on our radar.",
+                homeBtn: 'Back to Home',
+                backBtn: 'Go Back',
+                suggestionsTitle: 'Maybe you are looking for:',
+                link1: 'Drone Services',
+                link2: 'Video Services',
+                link3: 'Contact'
+            }
+        };
+        
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            document.getElementById('title').textContent = translations[lang].title;
+            document.getElementById('message').textContent = translations[lang].message;
+            document.getElementById('homeBtn').textContent = translations[lang].homeBtn;
+            document.getElementById('backBtn').textContent = translations[lang].backBtn;
+            document.getElementById('suggestionsTitle').textContent = translations[lang].suggestionsTitle;
+            document.getElementById('link1').textContent = translations[lang].link1;
+            document.getElementById('link2').textContent = translations[lang].link2;
+            document.getElementById('link3').textContent = translations[lang].link3;
+            document.getElementById('currentLang').textContent = lang.toUpperCase();
+            localStorage.setItem('language', lang);
+        }
+        
+        // Initialize language
+        setLanguage(currentLanguage);
+        
+        // Language toggle
+        document.getElementById('langToggle').addEventListener('click', function() {
+            const newLang = currentLanguage === 'it' ? 'en' : 'it';
+            setLanguage(newLang);
+        });
+    </script>
+    
+</body>
+</html>
+

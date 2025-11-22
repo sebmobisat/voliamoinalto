@@ -1,0 +1,37 @@
+{
+  "name": "Voliamo in Alto - Riprese Aeree con Droni",
+  "short_name": "Voliamo in Alto",
+  "description": "Servizi professionali di riprese aeree con droni a Milano. Pilota certificato EASA.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "images/ico.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "images/ico.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "photography", "video"],
+  "lang": "it-IT",
+  "dir": "ltr",
+  "scope": "/",
+  "screenshots": [
+    {
+      "src": "images/DSC05003.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
+      "platform": "wide"
+    }
+  ]
+}
+

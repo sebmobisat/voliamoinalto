@@ -1,0 +1,60 @@
+# Netlify Configuration File
+# https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build]
+  # Directory da pubblicare (root in questo caso)
+  publish = "."
+  
+  # Nessun comando di build necessario per sito statico
+  # command = ""
+
+# Redirect rules
+[[redirects]]
+  # Reindirizza www a non-www (opzionale)
+  from = "https://www.voliamoinalto.com/*"
+  to = "https://voliamoinalto.com/:splat"
+  status = 301
+  force = true
+
+# Headers per sicurezza e performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Security headers
+    X-Frame-Options = "SAMEORIGIN"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    
+    # Cache control
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# 404 page (opzionale - crea una pagina 404.html se vuoi personalizzarla)
+# [[redirects]]
+#   from = "/*"
+#   to = "/404.html"
+#   status = 404
+
+# Protezione contro hotlinking immagini (opzionale)
+# [[headers]]
+#   for = "/images/*"
+#   [headers.values]
+#     X-Robots-Tag = "noindex"
+
+
+

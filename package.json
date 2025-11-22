@@ -1,0 +1,36 @@
+{
+  "name": "voliamoinalto",
+  "version": "1.0.0",
+  "description": "Sito web professionale per servizi di riprese aeree con droni e video a Milano",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx live-server --port=8080",
+    "deploy:netlify": "netlify deploy --prod",
+    "deploy:vercel": "vercel --prod"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sebastianoorfeo/voliamoinalto.git"
+  },
+  "keywords": [
+    "droni",
+    "drone",
+    "aerial",
+    "video",
+    "photography",
+    "milano",
+    "milan",
+    "cinematography",
+    "wedding",
+    "real-estate"
+  ],
+  "author": "Sebastiano Orfeo <info@voliamoinalto.com>",
+  "license": "UNLICENSED",
+  "private": true,
+  "devDependencies": {},
+  "dependencies": {}
+}
+
+
+
