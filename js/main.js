@@ -196,45 +196,48 @@ contactForm?.addEventListener('submit', function(e) {
         ? '<i class="fas fa-spinner fa-spin mr-2"></i>Invio in corso...' 
         : '<i class="fas fa-spinner fa-spin mr-2"></i>Sending...';
     
-    // Simulate form submission (replace with actual API call)
-    setTimeout(() => {
-        // Show success message
-        formMessage.classList.remove('hidden', 'bg-red-100', 'text-red-700');
-        formMessage.classList.add('bg-green-100', 'text-green-700');
+    // Send to API
+    fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            // Show success message
+            formMessage.classList.remove('hidden', 'bg-red-100', 'text-red-700');
+            formMessage.classList.add('bg-green-100', 'text-green-700');
+            formMessage.textContent = currentLanguage === 'it'
+                ? '✅ Messaggio inviato con successo! Ti risponderò entro 24 ore.'
+                : '✅ Message sent successfully! I will reply within 24 hours.';
+            
+            // Reset form
+            contactForm.reset();
+            
+            // Hide message after 5 seconds
+            setTimeout(() => {
+                formMessage.classList.add('hidden');
+            }, 5000);
+        } else {
+            throw new Error(result.message);
+        }
+    })
+    .catch(error => {
+        // Show error message
+        formMessage.classList.remove('hidden', 'bg-green-100', 'text-green-700');
+        formMessage.classList.add('bg-red-100', 'text-red-700');
         formMessage.textContent = currentLanguage === 'it'
-            ? 'Messaggio inviato con successo! Ti risponderò entro 24 ore.'
-            : 'Message sent successfully! I will reply within 24 hours.';
+            ? '❌ Errore durante l\'invio. Riprova o contattami via email.'
+            : '❌ Error sending message. Please try again or contact me via email.';
         
-        // Reset form
-        contactForm.reset();
-        
+        console.error('Form submission error:', error);
+    })
+    .finally(() => {
         // Reset button
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalText;
-        
-        // Hide message after 5 seconds
-        setTimeout(() => {
-            formMessage.classList.add('hidden');
-        }, 5000);
-        
-        // Log form data (for development)
-        console.log('Form submitted:', data);
-        
-        // In production, you would send this to a backend:
-        // fetch('/api/contact', {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify(data)
-        // })
-        // .then(response => response.json())
-        // .then(result => {
-        //     // Handle success
-        // })
-        // .catch(error => {
-        //     // Handle error
-        // });
-        
-    }, 1500);
+    });
 });
 
 // Lazy Loading Images (if you add real images later)
