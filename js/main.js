@@ -259,6 +259,27 @@ if ('IntersectionObserver' in window) {
     lazyImages.forEach(img => imageObserver.observe(img));
 }
 
+// Lazy Loading for Vimeo iframes (performance boost!)
+if ('IntersectionObserver' in window) {
+    const iframeObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const iframe = entry.target;
+                if (iframe.dataset.src) {
+                    iframe.src = iframe.dataset.src;
+                    iframe.classList.remove('lazy-iframe');
+                    iframeObserver.unobserve(iframe);
+                }
+            }
+        });
+    }, {
+        rootMargin: '200px' // Start loading 200px before entering viewport
+    });
+    
+    const lazyIframes = document.querySelectorAll('iframe.lazy-iframe');
+    lazyIframes.forEach(iframe => iframeObserver.observe(iframe));
+}
+
 // Add floating animation to hero elements
 const floatingElements = document.querySelectorAll('.floating');
 floatingElements.forEach((el, index) => {

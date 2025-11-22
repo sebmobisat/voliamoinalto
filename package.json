@@ -7,6 +7,8 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "static": "npx serve -l 5000",
+    "optimize": "node optimize-images.js",
+    "compress": "node compress-images.js",
     "deploy:netlify": "netlify deploy --prod",
     "deploy:vercel": "vercel --prod",
     "deploy:railway": "railway up"
@@ -34,7 +36,8 @@
     "node": ">=18.0.0"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "sharp": "^0.33.0"
   },
   "dependencies": {
     "express": "^4.18.2",
