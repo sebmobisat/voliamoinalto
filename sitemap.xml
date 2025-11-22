@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     
     <!-- Home Page -->
     <url>
         <loc>https://voliamoinalto.com/</loc>
-        <lastmod>2024-11-22</lastmod>
+        <lastmod>2025-11-22</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
     </url>
@@ -12,7 +12,7 @@
     <!-- Sezione Servizi Droni -->
     <url>
         <loc>https://voliamoinalto.com/#servizi-droni</loc>
-        <lastmod>2024-11-22</lastmod>
+        <lastmod>2025-11-22</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
@@ -20,7 +20,7 @@
     <!-- Sezione Servizi Video -->
     <url>
         <loc>https://voliamoinalto.com/#servizi-video</loc>
-        <lastmod>2024-11-22</lastmod>
+        <lastmod>2025-11-22</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
@@ -28,7 +28,7 @@
     <!-- Chi Sono -->
     <url>
         <loc>https://voliamoinalto.com/#chi-sono</loc>
-        <lastmod>2024-11-22</lastmod>
+        <lastmod>2025-11-22</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
@@ -36,7 +36,7 @@
     <!-- Contatti -->
     <url>
         <loc>https://voliamoinalto.com/#contatti</loc>
-        <lastmod>2024-11-22</lastmod>
+        <lastmod>2025-11-22</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>

@@ -10,12 +10,12 @@ Sitemap: https://voliamoinalto.com/sitemap.xml
 Disallow: /admin/
 Disallow: /private/
 Disallow: /*.json$
-Disallow: /*.xml$
 
-# Allow CSS and JS for better indexing
+# Allow CSS, JS, images and sitemap for better indexing
 Allow: /css/
 Allow: /js/
 Allow: /images/
+Allow: /sitemap.xml
 
 # Crawl-delay (opzionale, utile per prevenire sovraccarico)
 # Crawl-delay: 1
